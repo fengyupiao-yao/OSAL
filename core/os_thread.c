@@ -51,11 +51,30 @@ osThreadDef_t *osThreadGetHighPrio(void){
     return os_info.p_thread_ready;
 }
 
-void osThreadYield(void){
+osThreadState_t osThreadYield(void){
+    return OS_THREAD_READY;
+}
+
+void osThreadSwitch(osThreadState_t thread_state){
     osThreadDef_t *p_thread;
-    p_thread = os_info.p_thread_curr;
-    os_info.p_thread_curr = os_info.p_thread_ready;
-    os_info.p_thread_ready = os_info.p_thread_ready->next;
-    osThreadAdd(p_thread);
+    switch(thread_state){
+        case OS_THREAD_READY:
+            p_thread = os_info.p_thread_curr;
+            os_info.p_thread_curr = os_info.p_thread_ready;       //get from ready list
+            os_info.p_thread_ready = os_info.p_thread_ready->next;
+            osThreadAdd(p_thread);    //add to ready as priority
+        break;
+        case OS_THREAD_RUNING:
+        break;
+        case OS_THREAD_WAITING:
+            os_info.p_thread_curr->next = os_info.p_thread_active;    //put into active list
+            os_info.p_thread_active = os_info.p_thread_curr;
+            os_info.p_thread_curr = os_info.p_thread_ready;           //get from ready list
+            os_info.p_thread_ready = os_info.p_thread_ready->next;
+        break;
+        case OS_THREAD_EXIT:
+        break;
+        default:break;
+    }
 }
 

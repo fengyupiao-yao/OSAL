@@ -5,21 +5,6 @@
 #include "os_types.h"
 #include "os_thread.h"
 
-#define PC_INIT(p_pc)    *p_pc = 0
-#define PC_SET(p_pc)     *p_pc = __LINE__;    \
-                          case __LINE__:
-
-
-#define OS_THREAD_BEGIN()    \
-    switch(osThreadGetPC(NULL)){    \
-        case 0:
-
-
-#define OS_THREAD_END()                            \
-                        osThreadSetPC(NULL, 0);    \
-                        }
-
-
 
 typedef struct{
     osThreadDef_t *p_thread_active;
@@ -34,5 +19,9 @@ void osCoreInit(void);
 void osSched(void);
 void osRun(void);
 
+#if OS_FEATURE_TIME_SUPPORTED
+osThreadState_t osTimeDly(os_time_t delay_ticks);
+void osTimeUpdate(void);
+#endif
 
 #endif  /*__OS_CORE_H__*/

@@ -20,9 +20,12 @@ void osSched(void){
 }
 
 void osRun(void){
+    osThreadState_t thread_state;
+    osSched();
     while(1){
         if(os_info.p_thread_curr){
-            os_info.p_thread_curr->p_threadFunc(os_info.p_thread_curr->p_argv);
+            thread_state = os_info.p_thread_curr->p_threadFunc(os_info.p_thread_curr->p_argv);
+            osThreadSwitch(thread_state);
         }else{
             //sleep
             //WFI
@@ -30,6 +33,39 @@ void osRun(void){
     }
 }
 
+#if OS_FEATURE_TIME_SUPPORTED
+osThreadState_t osTimeDly(os_time_t delay_ticks){
+    os_info.p_thread_curr->delay_ticks = delay_ticks;
+    if(delay_ticks){
+        return OS_THREAD_WAITING;
+    }else{
+        return OS_THREAD_RUNING;
+    }
+}
 
+osThreadState_t osTimeDlyResume(osThreadDef_t *p_thread){
+    p_thread->delay_ticks = 0;
+    //ready;
+}
 
+void osTimeUpdate(void){
+    osThreadDef_t *p_thread;
+    osThreadDef_t **p_pre_thread;
 
+    p_pre_thread = &(os_info.p_thread_active);
+    p_thread = os_info.p_thread_active;
+    while(p_thread){
+        if(p_thread->delay_ticks){
+            p_thread->delay_ticks--;
+            if(p_thread->delay_ticks == 0){
+                *p_pre_thread = p_thread->next;
+                osThreadAdd(p_thread);
+                return;
+            }
+        }
+        p_pre_thread = &p_thread;
+        p_thread = p_thread->next;
+    }
+}
+
+#endif

@@ -36,11 +36,11 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../core/os.h" />
+		<Unit filename="../../core/os_cfg.h" />
 		<Unit filename="../../core/os_core.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../core/os_core.h" />
-		<Unit filename="../../core/os_include.h" />
 		<Unit filename="../../core/os_thread.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -48,6 +48,12 @@
 		<Unit filename="../../core/os_types.h" />
 		<Unit filename="../../core/os_utils.h" />
 		<Unit filename="../../example/hello_word.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="win_time.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Extensions>
