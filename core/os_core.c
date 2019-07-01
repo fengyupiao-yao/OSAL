@@ -16,7 +16,9 @@ void osSched(void){
         return;
     }
     os_info.p_thread_curr = os_info.p_thread_ready;
-    os_info.p_thread_ready = os_info.p_thread_ready->next;
+    if(os_info.p_thread_ready){
+        os_info.p_thread_ready = os_info.p_thread_ready->next;
+    }
 }
 
 void osRun(void){
@@ -29,6 +31,8 @@ void osRun(void){
         }else{
             //sleep
             //WFI
+            win_wfi();
+            osSched();
         }
     }
 }
@@ -50,20 +54,29 @@ osThreadState_t osTimeDlyResume(osThreadDef_t *p_thread){
 
 void osTimeUpdate(void){
     osThreadDef_t *p_thread;
-    osThreadDef_t **p_pre_thread;
+    osThreadDef_t *p_pre_thread;
 
-    p_pre_thread = &(os_info.p_thread_active);
+    p_pre_thread = NULL;
     p_thread = os_info.p_thread_active;
     while(p_thread){
         if(p_thread->delay_ticks){
             p_thread->delay_ticks--;
             if(p_thread->delay_ticks == 0){
-                *p_pre_thread = p_thread->next;
+                if(p_pre_thread){
+                    p_pre_thread->next = p_thread->next;
+                }else{
+                    os_info.p_thread_active = p_thread->next;
+                }
                 osThreadAdd(p_thread);
-                return;
+                if(p_pre_thread){
+                    p_thread = p_pre_thread->next;
+                }else{
+                    p_thread = os_info.p_thread_active;
+                }
+                continue;
             }
         }
-        p_pre_thread = &p_thread;
+        p_pre_thread = p_thread;
         p_thread = p_thread->next;
     }
 }

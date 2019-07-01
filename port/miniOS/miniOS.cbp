@@ -49,6 +49,11 @@
 		<Unit filename="../../core/os_utils.h" />
 		<Unit filename="../../example/hello_word.c">
 			<Option compilerVar="CC" />
+			<Option compile="0" />
+			<Option link="0" />
+		</Unit>
+		<Unit filename="../../example/hello_world_dly.c">
+			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />

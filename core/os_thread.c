@@ -23,6 +23,7 @@ void osThreadAdd(osThreadDef_t *p_thread_def){
     osThreadDef_t **p_pre, **p_cur;
     p_pre = NULL;
     p_cur = &(os_info.p_thread_ready);
+    p_thread_def->next = NULL;
     while(1){
         if(*p_cur == NULL){
             *p_cur = p_thread_def;
@@ -70,7 +71,9 @@ void osThreadSwitch(osThreadState_t thread_state){
             os_info.p_thread_curr->next = os_info.p_thread_active;    //put into active list
             os_info.p_thread_active = os_info.p_thread_curr;
             os_info.p_thread_curr = os_info.p_thread_ready;           //get from ready list
-            os_info.p_thread_ready = os_info.p_thread_ready->next;
+            if(os_info.p_thread_ready){
+                os_info.p_thread_ready = os_info.p_thread_ready->next;
+            }
         break;
         case OS_THREAD_EXIT:
         break;

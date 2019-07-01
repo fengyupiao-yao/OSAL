@@ -5,11 +5,11 @@ osThreadState_t hello_world_1(void *argv){
     while(1){
         OS_THREAD_BEGIN();
         printf("hello world 1 start. \n");
-        OS_THREAD_YIELD();
+        OS_TIME_DLY(5);
         printf("hello world 1 continue.\n");
-        OS_THREAD_YIELD();
+        OS_TIME_DLY(5);
         printf("hello world 1 end.\n");
-        OS_THREAD_YIELD();
+        OS_TIME_DLY(5);
         OS_THREAD_END();
     }
 }
@@ -18,11 +18,11 @@ osThreadState_t hello_world_2(void *argv){
     while(1){
         OS_THREAD_BEGIN();
         printf("hello world 2 start. \n");
-        OS_THREAD_YIELD();
+        OS_TIME_DLY(5);
         printf("hello world 2 continue.\n");
-        OS_THREAD_YIELD();
+        OS_TIME_DLY(5);
         printf("hello world 2 end.\n");
-        OS_THREAD_YIELD();
+        OS_TIME_DLY(5);
         OS_THREAD_END();
     }
 }
